@@ -19,17 +19,23 @@ mail.init_app(app)
 @app.route('/contact', methods=['POST'])
 def contact():
     data = request.get_json()
-    print(data)
-    print(os.environ.get('DB_USER'))
-
     name = data['name']
     email = data['email']
     subject = data['subject']
     message = data['message']
-    print(name)
+    
     msg = Message(subject, sender=email, recipients=[os.environ.get('DB_USER')])
     msg.body = """
     From: {} <{}>
     {}
     """.format(name, email, message)
     mail.send(msg)
+
+@app.errorhandler(404)
+def err_404(e):
+    return jsonify({"error": "Not found"}), 404
+
+@app.errorhandler(405)
+def err_405(e):
+    return jsonify({"error":"method not allowed"})
+
