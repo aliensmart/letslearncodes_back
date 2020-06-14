@@ -23,7 +23,7 @@ def contact():
     email = data['email']
     subject = data['subject']
     message = data['message']
-    
+
     msg = Message(subject, sender=email, recipients=[os.environ.get('DB_USER')])
     msg.body = """
     From: {} <{}>
